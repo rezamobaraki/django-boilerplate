@@ -1,6 +1,7 @@
-## Django Boilerplate Project
+### Django Boilerplate Project
 
-This is a boilerplate project for Django, designed to help you get started quickly with a standard setup. It includes configurations for Poetry, PostgreSQL, and various Django apps and middleware.
+This is a boilerplate project for Django, designed to help you get started quickly with a standard setup. It includes
+configurations for Poetry, PostgreSQL, and various Django apps and middleware.
 
 ### Prerequisites
 
@@ -22,7 +23,7 @@ This is a boilerplate project for Django, designed to help you get started quick
     ```
 
 3. **Set up environment variables:**
-    Create a `.env` file in the root directory and add the following variables:
+   Create a `.env` file in the root directory and add the following variables:
     ```env
     POSTGRES_NAME=<your-database-name>
     POSTGRES_USER=<your-database-user>
@@ -70,7 +71,7 @@ This project includes a `Makefile` for common tasks:
 - `make make-migration`: Create a migration
 - `make dump-data`: Dump data
 - `make create-superuser`: Create a superuser
-- `make db_shell`: Run the Django database shell
+- `make db-shell`: Run the Django database shell
 - `make shell`: Run the Django shell
 - `make show-urls`: Show all URLs
 - `make test`: Run tests
@@ -79,24 +80,48 @@ This project includes a `Makefile` for common tasks:
 - `make make-messages`: Create messages
 - `make compile-messages`: Compile messages
 
+### Docker Commands
+
+This project includes Docker support with the following commands:
+
+- `make build`: Build the Docker image
+- `make build-local`: Build the Docker image using the local Dockerfile
+- `make up`: Start the Docker containers
+- `make up-force-build`: Start the Docker containers with a forced build
+- `make down`: Stop the Docker containers
+
 ### Project Structure
 
 ```
-├── src/
-│   ├── core/
-│   │   ├── settings/
-│   │   │   ├── django/
-│   │   │   │   ├── base.py
-│   │   │   │   ├── local.py
-│   │   │   │   ├── production.py
-│   │   ├── wsgi.py
-│   │   ├── urls.py
-│   ├── manage.py
-├── pyproject.toml
+├── Dockerfile
 ├── Makefile
-├── .env
+├── README.md
+├── config.example.env
+├── docker-compose.yaml
+├── poetry.lock
+├── pyproject.toml
+└── src
+    ├── core
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── env.py
+    │   ├── settings
+    │   │   ├── __init__.py
+    │   │   ├── django
+    │   │   │   ├── __init__.py
+    │   │   │   ├── base.py
+    │   │   │   ├── local.py
+    │   │   │   ├── production.py
+    │   │   │   └── test.py
+    │   │   └── third_parties
+    │   │       ├── __init__.py
+    │   │       ├── drf.py
+    │   │       └── jwt.py
+    │   ├── urls.py
+    │   └── wsgi.py
+    └── manage.py
 ```
 
 ### License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License..
