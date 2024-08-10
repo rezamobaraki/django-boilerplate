@@ -66,3 +66,30 @@ compile-messages: ## Compile messages
 
 ## docker compose
 # TODO: add docker compose commands
+build:
+	sudo docker build . -t boilerplate:latest -f Dockerfile
+
+build-local:
+	sudo docker build . -t boilerplate:latest -f Dockerfile.local
+
+prepare-compose:
+	@[ -d .compose ] || mkdir .compose
+
+	@if [ ! -f .compose/config.env ]; then \
+		cp config.example .compose/config.env; \
+		sed -i -e 's/localhost:6379/redis:6379/g' .compose/config.env; \
+		sed -i -e 's/POSTGRES_NAME=NAME/POSTGRES_NAME=boilerplate/g' .compose/config.env; \
+		sed -i -e 's/POSTGRES_USER=USER/POSTGRES_USER=postgres/g' .compose/config.env; \
+		sed -i -e 's/POSTGRES_PASSWORD=PASSWORD/POSTGRES_PASSWORD=postgres/g' .compose/config.env; \
+		sed -i -e 's/POSTGRES_HOST=HOST/POSTGRES_HOST=postgres/g' .compose/config.env; \
+		sed -i -e 's/REDIS_HOST=LOCALHOST/REDIS_HOST=redis/g' .compose/config.env; \
+	fi;
+
+up: prepare-compose
+	sudo docker-compose up -d
+
+up-force-build:
+	sudo docker-compose up -d --build
+
+down:
+	sudo docker-compose down
