@@ -1,7 +1,14 @@
 POETRY=poetry
 MANAGE=src/manage.py
+ENV_FILE=config.env
 
-.PHONY: help install runserver migrate make-migration dump-data create-superuser db_shell shell show-urls test lint collect-static make-messages compile-messages
+# Load environment variables from config.env
+ifneq (,$(wildcard $(ENV_FILE)))
+    include $(ENV_FILE)
+    export $(shell sed 's/=.*//' $(ENV_FILE))
+endif
+
+.PHONY: help install runserver migrate make-migration dump-data create-superuser db-shell shell shell-plus show-urls test lint collect-static make-messages compile-messages
 
 help: ## Show this help
 	@echo "Usage: make [target]"
@@ -27,11 +34,14 @@ dump-data: ## Dump data
 create-superuser: ## Create a superuser
 	$(POETRY) run $(MANAGE) createsuperuser
 
-db_shell: ## Run the Django database shell
+db-shell: ## Run the Django database shell
 	$(POETRY) run $(MANAGE) dbshell
 
+shell-plus: ## Run the Django shell plus with IPython
+	$(POETRY) run $(MANAGE) shell_plus --print-sql --ipython
+
 shell: ## Run the Django shell
-	$(POETRY) run $(MANAGE) shell_plus
+	$(POETRY) run $(MANAGE) shell
 
 show-urls: ## Show all urls
 	$(POETRY) run $(MANAGE) show_urls
