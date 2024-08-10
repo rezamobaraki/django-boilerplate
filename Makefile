@@ -8,13 +8,13 @@ ifneq (,$(wildcard $(ENV_FILE)))
     export $(shell sed 's/=.*//' $(ENV_FILE))
 endif
 
-.PHONY: help install runserver migrate make-migration dump-data create-superuser db-shell shell shell-plus show-urls test lint collect-static make-messages compile-messages
+.PHONY: help install runserver migrate make-migration dump-data create-superuser db-shell shell-plus show-urls test lint collect-static make-messages compile-messages shell
 
 help: ## Show this help
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {sub(/^[^:]+:/, "", $$0); printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install dependencies
 	$(POETRY) install
@@ -34,14 +34,14 @@ dump-data: ## Dump data
 create-superuser: ## Create a superuser
 	$(POETRY) run $(MANAGE) createsuperuser
 
-db-shell: ## Run the Django database shell
+db-shell: ## Run the Django database-shell
 	$(POETRY) run $(MANAGE) dbshell
 
-shell-plus: ## Run the Django shell plus with IPython
-	$(POETRY) run $(MANAGE) shell_plus --print-sql --ipython
-
-shell: ## Run the Django shell
+Shell: ## Run the Django shell
 	$(POETRY) run $(MANAGE) shell
+
+shell-plus: ## Run the Django shell plus with IPython and load rich extension
+	$(POETRY) run $(MANAGE) shell_plus --print-sql
 
 show-urls: ## Show all urls
 	$(POETRY) run $(MANAGE) show_urls
