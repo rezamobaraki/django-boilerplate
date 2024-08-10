@@ -22,6 +22,9 @@ install: ## Install dependencies
 runserver: ## Run the Django development server
 	$(POETRY) run $(MANAGE) runserver
 
+runserver-plus: ## Run the Django development server_plus
+	$(POETRY) run $(MANAGE) runserver_plus
+
 migrate: ## Apply database migrations
 	$(POETRY) run $(MANAGE) migrate
 
@@ -40,7 +43,7 @@ db-shell: ## Run the Django database-shell
 Shell: ## Run the Django shell
 	$(POETRY) run $(MANAGE) shell
 
-shell-plus: ## Run the Django shell plus with IPython and load rich extension
+shell-plus: ## Run the Django shell plus with print-sql
 	$(POETRY) run $(MANAGE) shell_plus --print-sql
 
 show-urls: ## Show all urls
