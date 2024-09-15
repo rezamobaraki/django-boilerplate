@@ -1,5 +1,4 @@
 name: boilerplate
-version: '3.9'
 
 
 services:
@@ -8,20 +7,32 @@ services:
     image: boilerplate_app:latest
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     command: >
       bash -c "python manage.py migrate
-      && gunicorn --workers=3 --timeout=600 --bind=0.0.0.0:8000 config.wsgi:application"
+      && gunicorn --workers=3 --timeout=600 --bind=0.0.0.0:8000 core.wsgi:application"
     depends_on:
       - postgres
       - redis
     env_file:
       - .compose/config.env
     networks:
-      - boilerplate
+      - goodreads
     ports:
       - "8000:8000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: always
+    volumes:
+      - app-data:/app
 
   celery:
     container_name: boilerplate_celery
@@ -61,11 +72,10 @@ services:
     networks:
       - boilerplate
     ports:
-      - "5432:5432"
+      - "5433:5432"
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
-
 
 networks:
   boilerplate:
@@ -74,3 +84,4 @@ networks:
 volumes:
   postgres-data:
   redis-data:
+  app-data:
